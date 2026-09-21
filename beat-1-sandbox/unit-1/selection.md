@@ -84,7 +84,6 @@ This is also the basis for the claim comment you write in Unit 2.
 
 **Selection rationale**
 
-[Answer all three:
 
 1. The issue's fit to your interests and to the time available.
 This issue fits my interests because it involves Python, debugging, GitHub APIs, and an AI agent. I have experience with Python, APIs, and AI projects, so I am interested in learning more about how these parts work together. The scope of the issue also seems manageable with the time I have available.
@@ -93,7 +92,7 @@ This issue fits my interests because it involves Python, debugging, GitHub APIs,
 The verdict correctly identified that the issue is a good-first issue, currently unclaimed, and matches my technical background. The rubric could not fully consider what I personally want to learn, so I also considered my interest in gaining more experience with AI agents and backend API develo
 3. The anticipated difficulty in claiming it.
  I think the issue should be fairly easy to claim because the issue is currently unclaimed and there are no linked pull requests. However, another student may choose the same issue, so I will follow the claiming process in Unit 2.
-   ]
+
 
 ---
 
