@@ -85,7 +85,7 @@ This is also the basis for the claim comment you write in Unit 2.
 **Selection rationale**
 
 
-1. The issue's fit to your interests and to the time available.
+1. The issue's fit to your interests and to the time available?
 This issue fits my interests because it involves Python, debugging, GitHub APIs, and an AI agent. I have experience with Python, APIs, and AI projects, so I am interested in learning more about how these parts work together. The scope of the issue also seems manageable with the time I have available.
 2. What the verdict identified correctly, and what you weighed that the rubric could
    not.
