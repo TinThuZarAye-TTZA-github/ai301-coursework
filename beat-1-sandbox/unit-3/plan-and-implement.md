@@ -15,17 +15,21 @@ label is not graded.
 
 **GitHub username**
 
-[Your GitHub username, exactly as it appears on your profile - no @, no
-profile URL. Your comment upstream is identified by this name, and it is
-the only thing that ties it to you. Several students may plan the same
-house issue, so this is what keeps their comments off your score and
-yours off theirs.]
+TinThuZarAye-TTZA-github
 
 **Plan comment**
 
-[Link to the comment where you posted your plan on the issue. Use the comment's own
-permalink. **Then paste the text of that comment underneath the link** — the pasted text is
-what this field is graded on, so copy across what you actually posted.]
+https://github.com/codepath/pathreview-ai301-fa26-s3/issues/18#issuecomment-5941622374
+
+Hi! I reproduced this issue and traced the data flow from `GitHubTool` to `RepoAnalyzer`.
+
+My reproduction showed that `GitHubTool` succeeds, but its returned metadata does not contain `file_structure`. `RepoAnalyzer` uses that field to detect tests and CI, so `has_tests` and `has_ci` remain `False` even though the repository contains both `tests/` and `.github/workflows`.
+
+My plan is to update the GitHub metadata path so repository file information is provided to the existing analyzer, while keeping the change limited to this data flow. I also plan to add or update tests for the file-structure behavior.
+
+After the change, I will rerun my Unit 2 reproduction and expect `file_structure` to be present and both `has_tests` and `has_ci` to be `True` for the Path Review repository.
+
+One implementation detail I still need to verify is the appropriate GitHub API approach for retrieving the repository file information within the project's existing conventions.
 
 ---
 
@@ -33,47 +37,97 @@ what this field is graded on, so copy across what you actually posted.]
 
 **Branch**
 
-[The name of the branch you built the change on, exactly as it appears in your fork. The
-naming shape is a type prefix, then the issue number, then a short description. **The issue
-number in the branch name must be the number of the issue you claimed** — a name carrying
-any other number does not satisfy this field.]
+fix/18-repo-file-structure
 
 **Evidence**
 
-[Your Unit 2 reproduction steps re-run against the built change: the before, then the
-after. Paste both, including the commands you ran and their output.]
+### Before
+
+Command:
+
+```bash
+.venv/bin/python - <<'PY'
+from agent.tools.github_tool import GitHubTool
+from ingestion.parsers.repo_analyzer import RepoAnalyzer
+
+tool = GitHubTool()
+
+result = tool.execute({
+    "github_username": "codepath",
+    "repo_name": "pathreview-ai301-fa26-s3"
+})
+
+print("GitHubTool success:", result.success)
+print("file_structure present:", "file_structure" in result.data)
+
+analysis = RepoAnalyzer().parse(result.data)
+
+print("has_tests:", analysis.metadata["has_tests"])
+print("has_ci:", analysis.metadata["has_ci"])
+PY
+```
+
+Output:
+
+```text
+GitHubTool success: True
+file_structure present: False
+has_tests: False
+has_ci: False
+```
+
+### After
+
+Command:
+
+```bash
+.venv/bin/python - <<'PY'
+from agent.tools.github_tool import GitHubTool
+from ingestion.parsers.repo_analyzer import RepoAnalyzer
+
+tool = GitHubTool()
+
+result = tool.execute({
+    "github_username": "codepath",
+    "repo_name": "pathreview-ai301-fa26-s3"
+})
+
+print("GitHubTool success:", result.success)
+print("file_structure present:", "file_structure" in result.data)
+
+analysis = RepoAnalyzer().parse(result.data)
+
+print("has_tests:", analysis.metadata["has_tests"])
+print("has_ci:", analysis.metadata["has_ci"])
+PY
+```
+
+Output:
+
+```text
+2026-10-01 15:18:50 [info] github_repo_fetched language=Python repo=pathreview-ai301-fa26-s3 stars=6 username=codepath
+GitHubTool success: True
+file_structure present: True
+has_tests: True
+has_ci: True
+```
 
 ## Eval iterations
 
-Answer all four sections. Quote source text directly; paraphrase does not satisfy these
-fields.
-
 **Run history**
 
-[The agreement score of each run you did, in order. A single run is a complete answer if
-only one run occurred. **The last score in your list must match the agreement line in the
-`eval-run.txt` you committed** — that file is the record of your final run.]
+20/20 scored items
 
 **Package analysis**
 
-[Pick one scored package (`pkg-01` through `pkg-20` — the four `calib-` packages are never
-scored). Name it by id, say what your rubric decided and what the gold label said, and
-explain why your rubric read it that way.]
+`pkg-15` was categorized as `scope-creep`. My rubric decided `reject`, and the gold label was also `reject`. The package identified a specific root cause: the bundled runtime's 250 ms `autoSelectFamilyAttemptTimeout` was causing the connection failures. However, the proposed plan went beyond the direct fix by also proposing to “replace `node-fetch` with `undici`,” add a new timeout setting, change the sync error UI, and add retry-with-backoff. My `bounded-scope` check rejected this because these additional changes expanded the work beyond the reproduced timeout issue.
 
 **Check rationale**
 
-[Quote one check from the `rubric.md` you uploaded to `tools/plan-check/`, exactly as it reads now.
-Then say why it reads that way — what you revised to get there, or what you rejected in
-favour of it.]
+`test-plan` — Evidence: “The plan's test steps and expected results read against the reproduction evidence” — Pass condition: “Pass if the tests exercise the relevant behavior and define observable results that would demonstrate whether the reproduced problem is fixed without hiding regressions.” — Weight: `required`.
+
+I revised this check to require a test plan with observable results instead of simply saying to run tests. For my issue, the plan reruns the Unit 2 reproduction and compares `file_structure`, `has_tests`, and `has_ci` before and after the fix. I also included relevant regression testing so the plan can show that the reproduced problem is fixed without hiding regressions.
 
 **Trade-offs**
 
-[Every check gives something up. Any one of these is a complete answer: a package whose
-result it changes, a canary you re-ran with `--only`, a case you accept it will miss, or a
-stated reason nothing changed elsewhere. "Nothing changed, and here is how I know" earns
-the point in full when the reason follows.]
-
----
-
-Related paths: `plan.md` and `eval-run.txt` in this directory; your skill's files in
-`tools/plan-check/`.
+The `bounded-scope` check can reject a plan even when some of its additional changes could be useful, because it prioritizes keeping the implementation focused on the reproduced issue. For example, `pkg-15` proposed useful related work such as replacing `node-fetch` with `undici`, adding a timeout setting, improving sync error reporting, and adding retry-with-backoff, but those changes expanded beyond the direct timeout fix. I accepted this trade-off because the purpose of the check is to prevent unnecessary scope expansion. In the final evaluation, the rubric rejected all four `scope-creep` packages, and the overall agreement was `20/20 scored items`.
