@@ -28,11 +28,11 @@ For Repository Memory, I created a local `CLAUDE.local.md` file in the `wazuh-mc
 
 After updating the rubric, I reran the Unit 1 evaluation harness to verify that the changes did not break its existing behavior. The updated rubric achieved 18 out of 20 correct decisions (90%), meeting the required passing score. This helped me confirm that the revised scope check still performed well on the evaluation dataset.
 
-**Unit 7: Used a pre-PR check to review implementation readiness**
+**Unit 7: Installed and tested Ship-Gate for pull request verification**
 
-I ran a PR precheck on my contribution branch to review whether the implementation matched the plan, the tests supported the fix, and the changes were ready for review. The check passed its four categories: plan fidelity, test evidence, diff quality, and standards and communication. It also identified smaller concerns, including the behavior of deeply nested data and local documentation that needed cleanup. I used these findings to understand what I should disclose in the pull request and what could be improved later.
+I installed Ship-Gate in Claude Code to verify that my contribution passed the required checks before submitting a pull request. I created a local `ship-manifest.md` for `matchboxdesigngroup/wazuh-mcp` with two checks: Python tests and Ruff linting, based on my `CLAUDE.local.md`. I tested the hook using `gh pr create --help`, and Ship-Gate correctly blocked the command because no readable PR body was provided.
 
-TODO: Confirm whether this precheck was the required Unit 7 ship-gate tool and add the gate manifest details.
+I then ran the Ship-Gate checker using my contribution branch and `pr_draft.md`. The checks passed, including the Python test suite and Ruff linting. I also completed a PR precheck covering plan fidelity, test evidence, diff quality, and communication standards. Since I had already opened PR #18, I used these checks to verify my existing contribution rather than create another pull request. This taught me how automated checks can help catch problems and improve confidence before submitting code for review.
 
 **Unit 8: TODO — PR Monitor and Review Playbook**
 
@@ -107,13 +107,16 @@ The related test file was `tests/test_helpers.py`, where I added regression test
 
 **Environment Setup**
 
-I worked on macOS using Git, GitHub CLI, Claude Code, and the Python project from the wazuh-mcp repository.
+I worked on macOS using Git, GitHub CLI, Claude Code, and Python 3.13.7. The wazuh-mcp repository uses pyproject.toml for project configuration, and I used a local .venv virtual environment with pip 26.3 available for package management.
 
-I inspected the repository's existing code and test structure before making changes. I used the project's Python test suite to establish a baseline and then added regression tests for the pagination issue.
+I inspected the repository's code and test structure before making changes. I used the following commands to verify the implementation:
 
-The original test suite passed 190 tests before my changes.
+.venv/bin/python -m pytest -q
+.venv/bin/ruff check .
 
-TODO: Record the exact Python version, package manager, dependency installation commands, and test command used in your local environment.
+The original test suite passed 190 tests. After adding three regression tests and implementing the pagination fix, all 193 tests passed, and Ruff completed successfully.
+
+The exact original dependency installation command was not preserved in my terminal history. I verified the existing environment rather than reinstalling the dependencies.
 
 **Steps to Reproduce**
 
