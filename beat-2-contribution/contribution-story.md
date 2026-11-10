@@ -34,11 +34,11 @@ I installed Ship-Gate in Claude Code to verify that my contribution passed the r
 
 I then ran the Ship-Gate checker using my contribution branch and `pr_draft.md`. The checks passed, including the Python test suite and Ruff linting. I also completed a PR precheck covering plan fidelity, test evidence, diff quality, and communication standards. Since I had already opened PR #18, I used these checks to verify my existing contribution rather than create another pull request. This taught me how automated checks can help catch problems and improve confidence before submitting code for review.
 
-**Unit 8: TODO — PR Monitor and Review Playbook**
+**Unit 8: Used PR Monitor and Review Playbook to track maintainer feedback**
 
-TODO: Describe the PR-monitor and playbook work required by Unit 8, including what the tool read, what it drafted, and what you did with its output. Do not claim this tool was used until you have actually run it.
+I installed the PR Monitor and created a Review Playbook with rules for responding to reviewers, deciding when to follow up, writing polite reminders, and knowing when to stop pursuing a contribution. I ran the monitor against my open pull request #18. It checked the PR's activity, review status, comments, and merge readiness, then generated a report and a suggested next action.
 
----
+The monitor recommended waiting because my PR was less than one day old and my playbook requires waiting at least seven days before considering a follow-up. I reviewed the generated draft and decided not to post a comment because it would be too early. This helped me understand that maintaining an open-source contribution also means respecting maintainers' time rather than sending unnecessary reminders.
 
 ## Why I Chose This Issue
 
@@ -55,7 +55,7 @@ The Issue Scout helped me narrow down potential contributions, but I learned tha
 **Claim comment:** https://github.com/matchboxdesigngroup/wazuh-mcp/issues/7#issuecomment-6760446278
 
 I posted a comment expressing my interest in working on issue #7. I outlined my proposed approach, including trimming each item individually, correcting the pagination metadata, and adding regression tests. I also offered to adjust my implementation based on the maintainer's preference.
-**Issue selection approval:** TODO — Confirm instructor approval if this issue was found outside CodePath's Issue Selection site.
+**Issue selection approval:** I selected Issue #7 independently using my Issue Scout. Instructor approval has not yet been confirmed, so I will check whether approval is required for this issue.
 
 **Toolkit**
 
@@ -289,8 +289,9 @@ The pull request also explains a minor nesting-depth behavior difference and not
 
 **Maintainer Feedback:**
 
-- November 10, 2026: No maintainer review or feedback had been received when I opened the pull request.
-- TODO: Add future feedback and how I addressed it.
+- November 10, 2026: I checked PR #18 using PR Monitor. The pull request was open and mergeable, with no maintainer reviews or comments.
+- The monitor recommended waiting because the pull request was less than one day old and had not reached my seven-day follow-up threshold.
+- I reviewed the monitor's recommendation and did not post a follow-up comment. I will continue monitoring the PR and respond if the maintainer requests changes.
 
 **Status:** Awaiting review.
 
